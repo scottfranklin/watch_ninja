@@ -113,7 +113,8 @@ int main(int argc, char* argv) {
                         int bl = strlen(base);
                         int el = strlen(event->name);
 
-                        if (event->name[el - 1] != 'c' && (el < 4 || event->name[el - 1] != 'p' || event->name[el - 3] != 'c')) {
+                        if (event->name[el - 1] != 'c' && (el < 4 || event->name[el - 1] != 'p' || event->name[el - 3] != 'c') &&
+                            event->name[el - 1] != 'x') {
                             i += EVENT_SIZE + event->len;
                             continue;
                         }
