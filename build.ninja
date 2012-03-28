@@ -14,3 +14,4 @@ rule link
 
 build $builddir/watch_ninja.o: cc watch_ninja.c
 build $builddir/watch_ninja: link $builddir/watch_ninja.o
+build watch_ninja: phony $builddir/watch_ninja
