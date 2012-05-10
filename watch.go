@@ -8,7 +8,6 @@ import (
 )
 
 type Watcher struct {
-    Modified chan string
     watch *inotify.Watcher
     watch_list map[string]bool
 }
@@ -18,12 +17,11 @@ func NewWatcher() (*Watcher, error) {
     if err != nil {
         return nil, err
     }
-    w := &Watcher{make(chan string), watch, map[string]bool{}}
-    go w.handle()
+    w := &Watcher{watch, map[string]bool{}}
     return w, nil
 }
 
-func (w *Watcher) handle() {
+func (w *Watcher) Handle(f func(string)) {
     last := ""
     next := time.Now()
     for {
@@ -38,7 +36,7 @@ func (w *Watcher) handle() {
                 }
                 next = t.Add(1 * time.Second)
                 last = e.Name
-                w.Modified <- e.Name
+                go f(e.Name)
             }
         }
     }

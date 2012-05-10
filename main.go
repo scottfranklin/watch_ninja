@@ -9,6 +9,9 @@ import (
     "os/exec"
 )
 
+var build_watcher *Watcher
+var file_watcher *Watcher
+
 func main() {
     build_watcher, err := NewWatcher()
     if err != nil {
@@ -19,24 +22,19 @@ func main() {
         panic(err)
     }
 
-    watcher, err := NewWatcher()
+    go build_watcher.Handle(Update)
+
+    file_watcher, err = NewWatcher()
     if err != nil {
         panic(err)
     }
 
-    Update(watcher)
+    Update("")
 
-    for {
-        select {
-        case <-build_watcher.Modified:
-            Update(watcher)
-        case f := <-watcher.Modified:
-            Build(f)
-        }
-    }
+    file_watcher.Handle(Build)
 }
 
-func Update(w *Watcher) {
+func Update(_ string) {
     cmd := exec.Command("ninja", "-t", "targets", "rule")
     out, err := cmd.CombinedOutput()
     if err != nil {
@@ -44,7 +42,7 @@ func Update(w *Watcher) {
         return
     }
     files := bytes.Split(out, []byte("\n"))
-    w.UpdateWatchList(files)
+    file_watcher.UpdateWatchList(files)
 }
 
 func Build(f string) {
