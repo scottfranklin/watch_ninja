@@ -49,16 +49,17 @@ func (w *Watcher) UpdateWatchList(files [][]byte) error {
     for _, b := range files {
         f := strings.TrimSpace(string(b))
         if f != "" {
-            watch_list[f] = true
             if w.watch_list[f] {
                 delete(w.watch_list, f)
+                watch_list[f] = true
             } else {
                 log.Println("Watching", f)
                 if err = w.watch.AddWatch(f, inotify.IN_MODIFY); err != nil {
                     log.Println(err)
+                } else {
+                    watch_list[f] = true
                 }
             }
-            watch_list[f] = true
         }
     }
 
@@ -72,4 +73,4 @@ func (w *Watcher) UpdateWatchList(files [][]byte) error {
 
     w.watch_list = watch_list
     return err
- }
+}
