@@ -38,7 +38,7 @@ func Update(_ string) {
     cmd := exec.Command("ninja", "-t", "targets", "rule")
     out, err := cmd.CombinedOutput()
     if err != nil {
-        log.Println(err)
+        log.Println("Generate watchlist:", err)
         return
     }
     files := bytes.Split(out, []byte("\n"))

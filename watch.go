@@ -27,7 +27,7 @@ func (w *Watcher) Handle(f func(string)) {
     for {
         select {
         case e := <-w.watch.Error:
-            log.Println(e)
+            log.Println("Inotify error:", e)
         case e := <-w.watch.Event:
             if e.Mask & inotify.IN_MODIFY != 0 {
                 t := time.Now()
