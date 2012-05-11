@@ -1,7 +1,7 @@
 package main
 
 import (
-    "github.com/dersebi/golang_exp/exp/inotify"
+    "exp/inotify"
     "log"
     "strings"
     "time"
