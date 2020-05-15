@@ -1,6 +1,7 @@
 package main
 
 import (
+    "flag"
     "bytes"
     "fmt"
     "io"
@@ -13,6 +14,14 @@ var build_watcher *Watcher
 var file_watcher *Watcher
 
 func main() {
+    cd := flag.String("C", ".", "change to this directory before invoking ninja")
+    flag.Parse()
+
+    err := os.Chdir(*cd)
+    if err != nil {
+        panic(err)
+    }
+
     build_watcher, err := NewWatcher()
     if err != nil {
         panic(err)
